@@ -19,21 +19,10 @@ jobs:
     - name: Install NDK
       run: sdkmanager "ndk;25.2.9519653"
 
-    - name: Find jni folder
-      run: |
-        echo "=== Buscando carpeta jni ==="
-        find . -type d -name "jni" 2>/dev/null
-        echo "=== Buscando Android.mk ==="
-        find . -name "Android.mk" 2>/dev/null
-        echo "=== Buscando Application.mk ==="
-        find . -name "Application.mk" 2>/dev/null
-
-    - name: Build with ndk-build
+    - name: Build ARMv7
       run: |
         export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/25.2.9519653
-        JNI_PATH=$(find . -type d -name "jni" | head -n 1)
-        echo "Compilando desde: $JNI_PATH"
-        cd "$JNI_PATH"
+        cd app/src/main/jni
         $ANDROID_NDK_HOME/ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk APP_ABI=armeabi-v7a
 
     - name: Upload .so files
@@ -41,5 +30,5 @@ jobs:
       with:
         name: mod-menu-so-armv7
         path: |
-          **/libs/armeabi-v7a/*.so
-          **/obj/local/armeabi-v7a/*.so
+          app/src/main/libs/armeabi-v7a/*.so
+          app/src/main/obj/local/armeabi-v7a/*.so
